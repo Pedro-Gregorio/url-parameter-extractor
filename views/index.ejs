@@ -34,11 +34,11 @@
     <div class="container">
         <% if (locals.extractedParameter) { %>
 
-            <p class="text-body-secondary">Result:
-            <h4 class="text-break" id="parameter">
+            <p class="text-body-secondary">Result:</p>
+            <p class="font-monospace text-break" id="parameter">
                 <%= extractedParameter %>
-            </h4>
             </p>
+            
             <button type="button" class="btn btn-primary mb-3" id="liveAlertBtn">Copy to Clipboard!</button>
             <div id="liveAlertPlaceholder"></div>
             <% } else if (locals.extractedParameter==="") { %>

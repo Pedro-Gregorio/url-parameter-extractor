@@ -1,7 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-const dotenv = require('dotenv').config();
+require("dotenv").config();
 
 const port = 3000;
 const app = express();
@@ -13,21 +13,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: process.env.SECRET_KEY, // Replace with a strong secret
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set secure: true if using HTTPS
+    cookie: { secure: false },
   })
 );
 
 app.post("/submit", (req, res) => {
   let extractedParameter;
-  try {
-    let params = new URL(req.body.url).searchParams;
-    extractedParameter = params.get(req.body.param) || "";
-  } catch (error) {
-    console.error(error);
+  let url = req.body.url;
+  let paramToSearch = req.body.param;
+
+  var queryString = url.split("?")[1];
+
+  if (!queryString) {
     extractedParameter = "";
+  } else {
+    
+    let queryArray = queryString.split("&");
+    let queryParams = {};
+    queryArray.forEach(function (pair) {
+      var [key, value] = pair.split("=");
+      queryParams[decodeURIComponent(key)] = decodeURIComponent(value || "");
+    });
+    
+    extractedParameter = queryParams[paramToSearch] || "";
+    console.log(extractedParameter === "")
   }
 
   req.session.extractedParameter = extractedParameter;
@@ -35,7 +47,8 @@ app.post("/submit", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  const extractedParameter = req.session.extractedParameter || null;
+  const extractedParameter = req.session.extractedParameter;
+  console.log(extractedParameter)
   res.render("index.ejs", { extractedParameter: extractedParameter });
 });
 
