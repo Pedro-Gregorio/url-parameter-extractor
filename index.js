@@ -11,13 +11,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 let extractedParameter;
 
 app.use("/submit", (req, res, next) => {
-  let params = new URL(req.body.url).searchParams;
-
-  if (params.get(req.body.param)) {
-    extractedParameter = params.get(req.body.param);
-  } else {
-    extractedParameter = null;
+  try {
+    let params = new URL(req.body.url).searchParams;
+    if (params.get(req.body.param)) {
+      extractedParameter = params.get(req.body.param);
+    } else {
+      extractedParameter = null;
+    }
+  } catch (error) {
+    console.error(error);
   }
+
   res.redirect("/");
   next();
 });
