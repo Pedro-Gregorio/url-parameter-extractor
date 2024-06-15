@@ -32,7 +32,7 @@
         </form>
     </div>
     <div class="container">
-        <% if (extractedParameter !=null) { %>
+        <% if (locals.extractedParameter) { %>
 
             <p class="text-body-secondary">Result:
             <h4 class="text-break" id="parameter">
@@ -41,7 +41,7 @@
             </p>
             <button type="button" class="btn btn-primary mb-3" id="liveAlertBtn">Copy to Clipboard!</button>
             <div id="liveAlertPlaceholder"></div>
-            <% } else if (extractedParameter===null) { %>
+            <% } else if (locals.extractedParameter==="") { %>
                 <h5>Parameter not found.</h5>
                 <% } %>
     </div>
