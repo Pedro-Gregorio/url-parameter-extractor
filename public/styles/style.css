@@ -1,3 +1,11 @@
-.hidden {
-    visibility: hidden;
+body {
+    background-color: #EEEEEE;
+}
+
+* {
+    font-family: "Montserrat", sans-serif;
+}
+
+p {
+    line-height: 3vh;
 }

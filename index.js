@@ -23,33 +23,41 @@ app.use(
 app.post("/submit", (req, res) => {
   let extractedParameter;
   let url = req.body.url;
-  let paramToSearch = req.body.param;
 
   var queryString = url.split("?")[1];
 
   if (!queryString) {
-    extractedParameter = "";
+    extractedParameters = "";
   } else {
     
     let queryArray = queryString.split("&");
     let queryParams = {};
     queryArray.forEach(function (pair) {
-      var [key, value] = pair.split("=");
-      queryParams[decodeURIComponent(key)] = decodeURIComponent(value || "");
+        var equalsPosition = pair.indexOf('=');
+        
+        var key, value;
+        if (equalsPosition === -1) {
+            key = pair;
+            value = '';
+        } else {
+            key = pair.slice(0, equalsPosition);
+            value = pair.slice(equalsPosition + 1);
+        }
+        queryParams[decodeURIComponent(key)] = decodeURIComponent(value || '');
     });
-    
-    extractedParameter = queryParams[paramToSearch] || "";
-    console.log(extractedParameter === "")
+    extractedParameters = queryParams;
   }
 
-  req.session.extractedParameter = extractedParameter;
+  req.session.url = url;
+  req.session.extractedParameters = extractedParameters;
   res.redirect("/");
 });
 
 app.get("/", (req, res) => {
-  const extractedParameter = req.session.extractedParameter;
-  console.log(extractedParameter)
-  res.render("index.ejs", { extractedParameter: extractedParameter });
+  const url = req.session.url;
+  const extractedParameters = req.session.extractedParameters;
+  
+  res.render("index.ejs", { url: url, extractedParameters: extractedParameters });
 });
 
 app.listen(port, (req, res) => {
